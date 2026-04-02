@@ -1,0 +1,43 @@
+#ps-vite-template-badge {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 2147483647;
+    max-width: min(calc(100vw - 24px), 360px);
+    padding: 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background: rgba(12, 14, 18, 0.78);
+    color: rgba(244, 247, 251, 0.88);
+    font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace, sans-serif;
+    font-size: 12px;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+#ps-vite-template-badge[hidden] {
+    display: none;
+}
+
+.ps-template-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.ps-template-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-template-separator {
+    color: rgba(244, 247, 251, 0.46);
+}
+
+.ps-template-color {
+    color: var(--ps-template-accent, #4ade80);
+    white-space: nowrap;
+}
