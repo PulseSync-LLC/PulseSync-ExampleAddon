@@ -15,10 +15,11 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "esbuild": "^0.27.5",
+    "@pulsesync/yamusic-types": "^0.0.1",
+    "@types/node": "^25.5.2",
+    "esbuild": "^0.28.0",
     "prettier": "^3.8.1",
     "typescript": "^6.0.2",
-    "vite": "^8.0.3"
+    "vite": "^8.0.8"
   }
 }

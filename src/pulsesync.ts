@@ -1,24 +1,4 @@
-export type AddonSettingValue<T> = {
-    value?: T
-    default?: T
-}
-
-export type AddonSettings = Record<string, AddonSettingValue<unknown> | unknown>
-
-export type AddonSettingsStore = {
-    getCurrent: () => AddonSettings
-    onChange: (callback: (settings: AddonSettings) => void) => () => void
-}
-
-type PulseSyncApi = {
-    getSettings?: (addonId: string) => AddonSettingsStore
-}
-
-declare global {
-    interface Window {
-        pulsesyncApi?: PulseSyncApi
-    }
-}
+import type { AddonSettingValue, AddonSettings, AddonSettingsStore } from '@pulsesync/yamusic-types'
 
 function unwrapSetting<T>(entry: AddonSettingValue<T> | unknown, fallback: T): T {
     if (entry && typeof entry === 'object' && !Array.isArray(entry)) {
@@ -38,7 +18,7 @@ function unwrapSetting<T>(entry: AddonSettingValue<T> | unknown, fallback: T): T
 
 export function getAddonSettings(addonName: string): AddonSettingsStore {
     return (
-        window.pulsesyncApi?.getSettings?.(addonName) ?? {
+        window.pulsesyncApi?.getSettings(addonName) ?? {
             getCurrent: () => ({}),
             onChange: () => () => {},
         }
