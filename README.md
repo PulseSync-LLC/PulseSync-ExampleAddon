@@ -4,6 +4,8 @@
 
 Точка входа: `src/main.ts`.
 `addon/` копируется в итоговую папку как есть.
+Автор аддона редактирует схему настроек в `addon/handleEvents.json`.
+PulseSync хранит пользовательские значения отдельно в `pulsesync.settings.json` рядом с установленным аддоном и не должен публиковать этот файл.
 
 Сборка кладёт в папку аддона:
 
@@ -13,6 +15,10 @@
 - `handleEvents.json`
 - `README.md`
 - `Assets/*`
+
+Во время работы PulseSync может дополнительно создать:
+
+- `pulsesync.settings.json`
 
 ## Команды
 
@@ -24,13 +30,14 @@ yarn sync
 yarn build:sync
 ```
 
-- `yarn dev` пишет сразу в папку аддонов PulseSync
+- `yarn dev` пишет сразу в папку аддонов PulseSync и следит и за `src/`, и за `addon/`, и за `addon.config.mjs`
 - `yarn build` собирает в `dist/pulsesync-vite-template`
 - `yarn sync` копирует `dist`-сборку в папку аддонов
 - `yarn build:sync` делает `build` и `sync`
 
 Обычно достаточно `yarn dev`, если нужно сразу проверять аддон в клиенте.
 `yarn dev` собирает без минификации, `yarn build` собирает с минификацией.
+Если во время `yarn dev` меняется `directoryName` в `addon.config.mjs`, dev-процесс нужно перезапустить.
 
 ## Папка аддонов
 
@@ -62,3 +69,15 @@ scripts/
 addon.config.mjs
 vite.config.ts
 ```
+
+## Настройки аддона
+
+- `addon/handleEvents.json` описывает поля, их типы и значения по умолчанию
+- обычный экран `Settings` в PulseSync меняет только пользовательские значения
+- `edit mode` в PulseSync меняет саму схему `handleEvents.json`
+- `pulsesync.settings.json` создаётся приложением автоматически рядом с установленным аддоном и не должен попадать в git или в архив публикации
+
+Коротко:
+
+- `handleEvents.json` — часть исходников аддона
+- `pulsesync.settings.json` — служебный файл PulseSync
