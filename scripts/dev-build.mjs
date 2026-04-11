@@ -10,6 +10,8 @@ const viteBin = path.join(rootDir, 'node_modules', 'vite', 'bin', 'vite.js')
 const outDir = getPulseSyncAddonDir()
 const addonStaticDir = path.join(rootDir, 'addon')
 const addonConfigPath = path.join(rootDir, 'addon.config.mjs')
+const sourceHandleEventsPath = path.join(addonStaticDir, 'handleEvents.json')
+const installedHandleEventsPath = path.join(outDir, 'handleEvents.json')
 
 function sanitizeMetadataValue(value) {
     if (Array.isArray(value)) {
@@ -76,6 +78,31 @@ async function buildStaticSignature() {
     return entries.sort().join('|')
 }
 
+async function readFileIfExists(filePath) {
+    try {
+        return await fs.readFile(filePath, 'utf8')
+    } catch (error) {
+        if (error?.code === 'ENOENT') {
+            return null
+        }
+
+        throw error
+    }
+}
+
+async function getFileSignatureIfExists(filePath) {
+    try {
+        const stat = await fs.stat(filePath)
+        return `${stat.mtimeMs}:${stat.size}`
+    } catch (error) {
+        if (error?.code === 'ENOENT') {
+            return null
+        }
+
+        throw error
+    }
+}
+
 async function syncStaticAddonArtifacts() {
     const metadata = await createMetadata()
     const currentAddonConfig = await loadAddonConfig()
@@ -91,9 +118,32 @@ async function syncStaticAddonArtifacts() {
     await fs.writeFile(path.join(outDir, 'metadata.json'), JSON.stringify(metadata, null, 4) + '\n', 'utf8')
 }
 
+async function syncInstalledHandleEventsIfNeeded() {
+    const nextInstalledSignature = await getFileSignatureIfExists(installedHandleEventsPath)
+    if (!nextInstalledSignature || nextInstalledSignature === lastInstalledHandleEventsSignature) {
+        return
+    }
+
+    lastInstalledHandleEventsSignature = nextInstalledSignature
+
+    const [installedHandleEvents, sourceHandleEvents] = await Promise.all([
+        readFileIfExists(installedHandleEventsPath),
+        readFileIfExists(sourceHandleEventsPath),
+    ])
+
+    if (installedHandleEvents == null || installedHandleEvents === sourceHandleEvents) {
+        return
+    }
+
+    await fs.writeFile(sourceHandleEventsPath, installedHandleEvents, 'utf8')
+    lastStaticSignature = await buildStaticSignature()
+    console.log('Synced handleEvents.json from installed addon back to source')
+}
+
 console.log(`Watching addon build into ${outDir}`)
 
 let lastStaticSignature = ''
+let lastInstalledHandleEventsSignature = ''
 let staticSyncPromise = Promise.resolve()
 let warnedDirectoryName = ''
 
@@ -105,6 +155,7 @@ const syncStaticIfNeeded = async force => {
 
     lastStaticSignature = nextSignature
     await syncStaticAddonArtifacts()
+    lastInstalledHandleEventsSignature = await getFileSignatureIfExists(installedHandleEventsPath)
     console.log('Synced static addon files')
 }
 
@@ -121,6 +172,7 @@ const child = spawn(process.execPath, [viteBin, 'build', '--watch', '--mode', 'd
 
 const staticSyncTimer = setInterval(() => {
     staticSyncPromise = staticSyncPromise
+        .then(() => syncInstalledHandleEventsIfNeeded())
         .then(() => syncStaticIfNeeded(false))
         .catch(error => {
             console.error('Failed to sync static addon files:', error)
