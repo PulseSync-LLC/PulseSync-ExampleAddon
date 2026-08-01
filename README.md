@@ -1,83 +1,88 @@
-# PulseSync Addon Template
+# PulseSync React Addon Template
 
-Шаблон `script`-аддона для PulseSync.
+Минимальный шаблон React-аддона для PulseSync.
 
-Точка входа: `src/main.ts`.
-`addon/` копируется в итоговую папку как есть.
-Автор аддона редактирует схему настроек в `addon/handleEvents.json`.
-PulseSync хранит пользовательские значения отдельно в `pulsesync.settings.json` рядом с установленным аддоном и не должен публиковать этот файл.
-
-Сборка кладёт в папку аддона:
-
-- `metadata.json`
-- `script.js`
-- `script.css`
-- `handleEvents.json`
-- `README.md`
-- `Assets/*`
-
-Во время работы PulseSync может дополнительно создать:
-
-- `pulsesync.settings.json`
-
-## Команды
+## Быстрый старт
 
 ```bash
 yarn
 yarn dev
-yarn build
-yarn sync
-yarn build:sync
 ```
 
-- `yarn dev` пишет сразу в папку аддонов PulseSync и следит и за `src/`, и за `addon/`, и за `addon.config.mjs`
-- `yarn build` собирает в `dist/pulsesync-vite-template`
-- `yarn sync` копирует `dist`-сборку в папку аддонов
-- `yarn build:sync` делает `build` и `sync`
+Открой `src/main.tsx` и замени демонстрационный компонент своим:
 
-Обычно достаточно `yarn dev`, если нужно сразу проверять аддон в клиенте.
-`yarn dev` собирает без минификации, `yarn build` собирает с минификацией.
-Если во время `yarn dev` меняется `directoryName` в `addon.config.mjs`, dev-процесс нужно перезапустить.
+```tsx
+import { defineAddon } from '@pulsesync/addon-sdk'
 
-## Папка аддонов
+function MyAddon() {
+    return <button>Мой аддон</button>
+}
 
-- Windows: `%APPDATA%/PulseSync/addons`
-- macOS: `~/Library/Application Support/PulseSync/addons`
-- Linux: `$XDG_CONFIG_HOME/PulseSync/addons` или `~/.config/PulseSync/addons`
-- override: `PULSESYNC_ADDONS_DIR`
-
-## Структура проекта
-
-```text
-src/
-  main.ts              точка входа
-  pulsesync.ts         хелперы для PulseSync API
-  styles.css           стили аддона
-  template/
-    constants.ts
-    dom.ts
-    render.ts
-    mount.ts
-addon/
-  handleEvents.json
-  README.md
-  Assets/
-scripts/
-  dev-build.mjs        watch-сборка в папку аддонов
-  sync-addon.mjs       копирование `dist`-сборки
-  pulsesync-paths.mjs  резолв пути до папки PulseSync
-addon.config.mjs
-vite.config.ts
+export default defineAddon({
+    id: 'my-addon',
+    component: MyAddon,
+})
 ```
 
-## Настройки аддона
+WebHost сам рендерит компонент. Вызывать `createRoot()` и устанавливать `react-dom` не нужно.
 
-- `addon/handleEvents.json` описывает поля, их типы и значения по умолчанию
-- обычный экран `Settings` в PulseSync меняет только пользовательские значения
-- `edit mode` в PulseSync меняет саму схему `handleEvents.json`
-- `pulsesync.settings.json` создаётся приложением автоматически рядом с установленным аддоном и не должен попадать в git или в архив публикации
+## Настройки
 
-Коротко:
+Настройки описываются типизированно в `src/settings.ts`:
 
-- `handleEvents.json` — часть исходников аддона
-- `pulsesync.settings.json` — служебный файл PulseSync
+```tsx
+export const settings = defineSettings({
+    enabled: {
+        type: 'boolean',
+        name: 'Включить аддон',
+        default: true,
+    },
+})
+```
+
+Передай `settings` в `pulseSyncAddon()` внутри `vite.config.ts`, а в компоненте используй `settings.use(api)`. SDK сам добавит схему в `metadata.json`; отдельный `handleEvents.json` новому аддону не нужен.
+
+## Команды
+
+- `yarn dev` — собирает аддон прямо в локальную папку PulseSync и следит за изменениями;
+- `yarn build` — создаёт готовый аддон в `dist/pulsesync-template`;
+- `yarn sync` — копирует готовую сборку в PulseSync;
+- `yarn build:sync` — собирает и копирует одной командой.
+
+## Куда рендерить компонент
+
+Обычный компонент:
+
+```tsx
+defineAddon({
+    id: 'my-addon',
+    component: MyAddon,
+})
+```
+
+Стандартная точка WebHost:
+
+```tsx
+defineAddon({
+    id: 'my-addon',
+    slots: {
+        playerBarButton: PlayerButton,
+    },
+})
+```
+
+Собственная DOM-цель:
+
+```tsx
+defineAddon({
+    id: 'my-addon',
+    mounts: [
+        {
+            target: '[data-test-id="PLAYERBAR_DESKTOP"]',
+            component: PlayerButton,
+        },
+    ],
+})
+```
+
+Метаданные находятся в `addon.config.mjs`, стили — в `src/styles.css`, статические файлы — в `addon/`.

@@ -1,16 +1,9 @@
 # PulseSync Addon Template
 
-Пример `script`-аддона для PulseSync.
+Минимальный React `web-addon`, собранный через `@pulsesync/addon-sdk`.
 
-Стили подключаются через `script.css`.
-Схема настроек читается из `handleEvents.json`, а пользовательские значения PulseSync хранит отдельно в `pulsesync.settings.json`.
+Файлы готового аддона:
 
-`handleEvents.json` поддерживает автор аддона.
-`pulsesync.settings.json` создаётся самим PulseSync и не считается частью исходников.
-
-Файлы:
-
-- `script.js`
-- `script.css`
-- `handleEvents.json`
-- `metadata.json`
+- `script.js`;
+- `script.css`;
+- `metadata.json` — метаданные и схема настроек, созданные SDK.
