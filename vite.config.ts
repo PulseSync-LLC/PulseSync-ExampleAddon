@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 import addonConfig from './addon.config.mjs'
-import { settings } from '@/settings.ts'
+import { settings } from './src/settings.ts'
 
 const manifest = defineAddonManifest(addonConfig)
 
