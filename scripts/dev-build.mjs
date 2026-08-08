@@ -3,11 +3,12 @@ import { spawn } from 'node:child_process'
 import { promises as fs } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import { getPulseSyncAddonDir } from './pulsesync-paths.mjs'
+import addonConfig from '../addon.config.mjs'
+import { deliverAddon, formatDeliveryResult } from './addon-delivery.mjs'
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const viteBin = path.join(rootDir, 'node_modules', 'vite', 'bin', 'vite.js')
-const outDir = getPulseSyncAddonDir()
+const outDir = path.join(rootDir, '.pulsesync-dev', addonConfig.directoryName)
 const addonStaticDir = path.join(rootDir, 'addon')
 const addonConfigPath = path.join(rootDir, 'addon.config.mjs')
 
@@ -59,11 +60,33 @@ async function syncStaticAddonArtifacts() {
     await fs.cp(addonStaticDir, outDir, { recursive: true, force: true })
 }
 
-console.log(`Watching addon build into ${outDir}`)
+async function collectBuildEntries() {
+    try {
+        return await collectWatchEntries(outDir)
+    } catch (error) {
+        if (error?.code === 'ENOENT') return []
+        throw error
+    }
+}
+
+async function buildIsReady() {
+    try {
+        const metadata = JSON.parse(await fs.readFile(path.join(outDir, 'metadata.json'), 'utf8'))
+        return typeof metadata.script === 'string' && metadata.script.trim() && (await fs.stat(path.join(outDir, metadata.script))).isFile()
+    } catch {
+        return false
+    }
+}
+
+console.log(`Watching addon sources; staging completed builds in ${outDir}`)
 
 let lastStaticSignature = ''
 let staticSyncPromise = Promise.resolve()
 let warnedDirectoryName = ''
+let observedBuildSignature = ''
+let lastDeliveredBuildSignature = ''
+let buildStableSince = 0
+let deliveryPromise = Promise.resolve()
 
 const syncStaticIfNeeded = async force => {
     const nextSignature = await buildStaticSignature()
@@ -87,6 +110,30 @@ const child = spawn(process.execPath, [viteBin, 'build', '--watch', '--mode', 'd
     stdio: 'inherit',
 })
 
+const deliveryTimer = setInterval(() => {
+    deliveryPromise = deliveryPromise
+        .then(async () => {
+            const entries = await collectBuildEntries()
+            const signature = entries.sort().join('|')
+            if (!signature) return
+
+            if (signature !== observedBuildSignature) {
+                observedBuildSignature = signature
+                buildStableSince = Date.now()
+                return
+            }
+            if (signature === lastDeliveredBuildSignature || Date.now() - buildStableSince < 600) return
+            if (!(await buildIsReady())) return
+
+            const result = await deliverAddon(outDir)
+            lastDeliveredBuildSignature = signature
+            console.log(formatDeliveryResult(result))
+        })
+        .catch(error => {
+            console.error('Failed to deliver addon build:', error)
+        })
+}, 200)
+
 const staticSyncTimer = setInterval(() => {
     staticSyncPromise = staticSyncPromise
         .then(() => syncStaticIfNeeded(false))
@@ -97,6 +144,7 @@ const staticSyncTimer = setInterval(() => {
 
 const stop = signal => {
     clearInterval(staticSyncTimer)
+    clearInterval(deliveryTimer)
     child.kill(signal)
 }
 
@@ -105,5 +153,6 @@ process.on('SIGTERM', () => stop('SIGTERM'))
 
 child.on('exit', code => {
     clearInterval(staticSyncTimer)
+    clearInterval(deliveryTimer)
     process.exitCode = code ?? 0
 })

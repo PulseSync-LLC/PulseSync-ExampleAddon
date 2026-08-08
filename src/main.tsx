@@ -1,6 +1,6 @@
 import './styles.css'
 
-import { useState } from 'react'
+import {useState} from 'react'
 
 import { defineAddon, type PulseSyncAddonComponentProps } from '@pulsesync/addon-sdk'
 
@@ -14,9 +14,11 @@ function ExampleAddon({ api }: PulseSyncAddonComponentProps) {
     if (!enabled) return null
 
     return (
-        <button className="ps-example-addon" style={{ backgroundColor: accentColor }} onClick={() => setClicks(value => value + 1)}>
-            {addonConfig.name}: {clicks}
-        </button>
+        <>
+            <button className="ps-example-addon" style={{ backgroundColor: accentColor }} onClick={() => setClicks(value => value + 1)}>
+                {addonConfig.name}: {clicks}
+            </button>
+        </>
     )
 }
 
