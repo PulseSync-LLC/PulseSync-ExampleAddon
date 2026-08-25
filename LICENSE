@@ -36,18 +36,18 @@ This License applies only to materials expressly distributed under it. Third-par
 
 2.4. “Developer Code” means original copyrightable code and materials independently created by You that do not reproduce, adapt, translate, or otherwise incorporate protected expression from the PulseSync Materials.
 
-2.5. “Bona Fide PulseSync Addon” means software that:
+2.5. “PulseSync Addon” means software that:
 (a) is designed to operate in, through, or in direct connection with PulseSync using an addon, plugin, extension, integration, SDK, API, or other mechanism intended for PulseSync;
-(b) provides its PulseSync-related functionality directly to users of PulseSync or directly supports such functionality; and
-(c) is not merely labeled, packaged, or minimally modified as a PulseSync addon for the purpose of obtaining rights under this License.
+(b) provides PulseSync-specific functionality directly to users of PulseSync or directly supports that functionality; and
+(c) uses the PulseSync Materials or Derived PulseSync Materials only to the extent reasonably necessary for that PulseSync-specific functionality.
 
-2.6. Software does not become a Bona Fide PulseSync Addon merely because it is technically compatible with PulseSync, can communicate with PulseSync, contains a nominal PulseSync integration, imports PulseSync interfaces, or offers PulseSync support as an incidental feature of an otherwise unrelated product.
+2.6. For purposes of this License, software is not considered a PulseSync Addon merely because it is technically compatible with PulseSync, can communicate with PulseSync, contains a nominal, incidental, dormant, or technically unnecessary PulseSync integration, imports PulseSync interfaces, or presents itself as a PulseSync addon while its relevant use of the PulseSync Materials serves an otherwise unrelated product.
 
 2.7. “PulseSync Integration Layer” means the logically identifiable portion of multi-platform software whose specific function is to implement integration with PulseSync and which can reasonably be distinguished from the software’s shared core and integrations with other platforms.
 
 2.8. “Development Product” means a reusable SDK, framework, library, addon template, starter template, starter kit, boilerplate, toolkit, code generator, scaffolding system, reusable development platform, or substantially similar product whose primary purpose is to facilitate development of other software rather than to provide end-user addon functionality.
 
-2.9. “Authorized Purpose” means the development, testing, building, maintenance, operation, distribution, licensing, and commercial exploitation of Bona Fide PulseSync Addons in accordance with this License.
+2.9. “Authorized Purpose” means the development, testing, building, maintenance, operation, distribution, licensing, and commercial exploitation of PulseSync Addons in accordance with this License.
 
 2.10. “You” means the individual or legal entity exercising rights granted by this License.
 
@@ -60,13 +60,13 @@ This License applies only to materials expressly distributed under it. Third-par
 (b) modify, adapt, translate, refactor, process, and otherwise alter the PulseSync Materials;
 (c) create Derived PulseSync Materials;
 (d) compile, bundle, package, and build the PulseSync Materials and Derived PulseSync Materials;
-(e) incorporate the PulseSync Materials and Derived PulseSync Materials into a Bona Fide PulseSync Addon;
+(e) incorporate the PulseSync Materials and Derived PulseSync Materials into a PulseSync Addon;
 (f) distribute such an addon in source, object, compiled, bundled, or packaged form;
 (g) make such an addon available through repositories, addon catalogs, marketplaces, websites, or direct distribution;
 (h) use the PulseSync Materials internally for development and testing of such an addon; and
 (i) charge fees for, sell, license, or otherwise commercially exploit such an addon.
 
-3.3. A Bona Fide PulseSync Addon may be free, commercial, open-source, source-available, closed-source, or proprietary.
+3.3. A PulseSync Addon may be free, commercial, open-source, source-available, closed-source, or proprietary.
 
 3.4. This License does not require disclosure of the source code of Developer Code.
 
@@ -78,21 +78,21 @@ This License applies only to materials expressly distributed under it. Third-par
 
 4.1. PulseSync Materials and Derived PulseSync Materials may be used only for the Authorized Purpose.
 
-4.2. You may not use, reproduce, modify, adapt, incorporate, deploy, distribute, sublicense, make available, or otherwise exploit PulseSync Materials or Derived PulseSync Materials as part of software whose relevant use of those materials is not reasonably necessary to provide or support functionality of a Bona Fide PulseSync Addon.
+4.2. You may not use, reproduce, modify, adapt, incorporate, deploy, distribute, sublicense, make available, or otherwise exploit PulseSync Materials or Derived PulseSync Materials as part of software whose relevant use of those materials is not reasonably necessary to provide or support functionality of a PulseSync Addon.
 
 4.3. Without the Licensor’s prior written permission, PulseSync Materials and Derived PulseSync Materials may not be used in or for an unrelated application, desktop client, mobile client, web application, software platform, plugin system, addon system, library, framework, SDK, template, toolkit, service, or other software product except to the limited extent expressly permitted for multi-platform software under Section 6.
 
-4.4. The addition of nominal, incidental, token, dormant, or technically unnecessary PulseSync compatibility does not convert unrelated software into a Bona Fide PulseSync Addon.
+4.4. The addition of nominal, incidental, token, dormant, or technically unnecessary PulseSync compatibility does not convert unrelated software into a PulseSync Addon.
 
 5. DEVELOPMENT PRODUCTS
 
-5.1. The right to create and distribute Bona Fide PulseSync Addons does not include the right to redistribute PulseSync Materials or Derived PulseSync Materials as a standalone or competing Development Product.
+5.1. The right to create and distribute PulseSync Addons does not include the right to redistribute PulseSync Materials or Derived PulseSync Materials as a standalone or competing Development Product.
 
 5.2. Without the Licensor’s prior written permission, You may not publish, distribute, sell, license, or make available PulseSync Materials or Derived PulseSync Materials as an alternative or competing SDK, framework, library, addon template, starter template, starter kit, boilerplate, toolkit, code generator, scaffolding system, reusable development platform, or substantially similar Development Product, even if that Development Product is intended exclusively for development for PulseSync.
 
 5.3. You may modify PulseSync Materials for Your own internal development workflow and may maintain private development tooling, provided that such tooling is not distributed as a Development Product.
 
-5.4. You may publish the source code of a specific Bona Fide PulseSync Addon even where it was initially created from a PulseSync template, provided that the repository or distribution is presented and maintained as that specific addon rather than as a reusable Development Product.
+5.4. You may publish the source code of a specific PulseSync Addon even where it was initially created from a PulseSync template, provided that the repository or distribution is presented and maintained as that specific addon rather than as a reusable Development Product.
 
 6. MULTI-PLATFORM SOFTWARE
 
@@ -108,7 +108,7 @@ This License applies only to materials expressly distributed under it. Third-par
 
 7. HOSTED SERVICES, BACKENDS, AND NETWORK USE
 
-7.1. You may operate a backend, hosted component, or network service containing PulseSync Materials or Derived PulseSync Materials only where that component is reasonably necessary to provide or support functionality of one or more Bona Fide PulseSync Addons.
+7.1. You may operate a backend, hosted component, or network service containing PulseSync Materials or Derived PulseSync Materials only where that component is reasonably necessary to provide or support functionality of one or more PulseSync Addons.
 
 7.2. PulseSync Materials and Derived PulseSync Materials may not be used to create or operate a general-purpose, standalone, or unrelated SaaS product, hosted API, cloud platform, backend service, developer service, or network service.
 
@@ -124,7 +124,7 @@ This License applies only to materials expressly distributed under it. Third-par
 
 8.3. Subject to the Licensor’s rights in PulseSync Materials and Derived PulseSync Materials, You retain the rights You otherwise hold in Developer Code and in independently created original contributions.
 
-8.4. The use, distribution, or commercial exploitation of a Bona Fide PulseSync Addon does not by itself transfer to the Licensor ownership of Your Developer Code.
+8.4. The use, distribution, or commercial exploitation of a PulseSync Addon does not by itself transfer to the Licensor ownership of Your Developer Code.
 
 8.5. You may apply any license or contractual terms to Developer Code, provided that such terms do not purport to grant rights in PulseSync Materials or Derived PulseSync Materials beyond this License.
 
@@ -144,7 +144,7 @@ This License applies only to materials expressly distributed under it. Third-par
 (a) the applicable copyright notice; and
 (b) a complete copy of this License or a clear reference to the location where the complete License can be obtained.
 
-10.2. If You distribute a compiled, bundled, or packaged Bona Fide PulseSync Addon containing PulseSync Materials or Derived PulseSync Materials, You must include a reasonably accessible notice substantially identifying that portions of the addon use materials licensed under the PulseSync Addon Development License 1.1.
+10.2. If You distribute a compiled, bundled, or packaged PulseSync Addon containing PulseSync Materials or Derived PulseSync Materials, You must include a reasonably accessible notice substantially identifying that portions of the addon use materials licensed under the PulseSync Addon Development License 1.1.
 
 10.3. The notice required under Section 10.2 may be placed in a LICENSE, NOTICE, THIRD-PARTY-NOTICES, documentation, package metadata, an “About” section, or another location reasonably accessible to recipients.
 
@@ -156,7 +156,7 @@ This License applies only to materials expressly distributed under it. Third-par
 
 11. DOWNSTREAM RECIPIENTS AND SUBLICENSING
 
-11.1. You may distribute lawful copies of a Bona Fide PulseSync Addon to end users and other recipients in accordance with this License.
+11.1. You may distribute lawful copies of a PulseSync Addon to end users and other recipients in accordance with this License.
 
 11.2. You may grant recipients rights in Developer Code under terms of Your choosing.
 
@@ -164,7 +164,7 @@ This License applies only to materials expressly distributed under it. Third-par
 
 11.4. A recipient wishing to modify, extract, reuse, or redistribute PulseSync Materials or Derived PulseSync Materials must independently comply with this License or obtain separate permission from the Licensor.
 
-11.5. Nothing in this License requires an end user to cease ordinary lawful use of a previously obtained Bona Fide PulseSync Addon solely because its distributor later loses rights under this License.
+11.5. Nothing in this License requires an end user to cease ordinary lawful use of a previously obtained PulseSync Addon solely because its distributor later loses rights under this License.
 
 12. THIRD-PARTY MATERIALS
 
