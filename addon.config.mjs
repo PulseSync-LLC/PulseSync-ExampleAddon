@@ -5,7 +5,6 @@ const addonConfig = {
     description: 'Стартовый шаблон аддона PulseSync на Vite и TypeScript.',
     version: '0.1.0',
     author: 'forea.adoxid',
-    type: 'web-addon',
     image: '',
     banner: '',
     libraryLogo: '',

@@ -36,10 +36,10 @@
   resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.142.0.tgz#0b4bd7841ef3dd267a69184b97452cc0b313fb52"
   integrity sha512-7W+2q5AKQVU36fkaryontrHn3YDt1RyUYXatw9i5H8ocYe2sPKSFB6eS8WNPeRKiN1qAWWZUPm7gwFzJGrccqQ==
 
-"@pulsesync/addon-sdk@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@pulsesync/addon-sdk/-/addon-sdk-0.1.2.tgz#52b29f9d740fa4eaf97bf79440efad3541c5324d"
-  integrity sha512-Rupa8ki3oB7gpURD3fe6CfT4PsDZca2fURykBdRdFih4XMOKaFl+Wr6suVBD5RK6wrWIlxbSW/7MiV5rW0YSqA==
+"@pulsesync/addon-sdk@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@pulsesync/addon-sdk/-/addon-sdk-0.1.3.tgz#9174559698ab63b3dce3c06db796adc3e2b071db"
+  integrity sha512-MmjsloArJV+/+O60xfTt7RtNKqEQxSdFQZWXG6V3/vNAVx79yoMtrgjq2qjBh5Wv+lEBtJh9z98pM66xarqjwg==
   dependencies:
     "@pulsesync/yamusic-types" "^0.0.1"
 
