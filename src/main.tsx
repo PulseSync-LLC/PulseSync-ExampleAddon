@@ -1,15 +1,15 @@
 import './styles.css'
 
-import {useState} from 'react'
+import { useState } from 'react'
 
-import { defineAddon, type PulseSyncAddonComponentProps } from '@pulsesync/addon-sdk'
+import { defineAddon } from '@pulsesync/addon-sdk'
 
 import addonConfig from '../addon.config.mjs'
 import { settings } from './settings'
 
-function ExampleAddon({ api }: PulseSyncAddonComponentProps) {
+function ExampleAddon() {
     const [clicks, setClicks] = useState(0)
-    const { accentColor, enabled } = settings.use(api)
+    const { accentColor, enabled } = settings.use()
 
     if (!enabled) return null
 
@@ -25,6 +25,7 @@ function ExampleAddon({ api }: PulseSyncAddonComponentProps) {
 export default defineAddon({
     id: addonConfig.id,
     name: addonConfig.name,
+    settings,
     slots: {
         playerBarButton: ExampleAddon,
     },

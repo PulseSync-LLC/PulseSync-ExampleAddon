@@ -31,16 +31,18 @@ WebHost сам рендерит компонент. Вызывать `createRoot
 Настройки описываются типизированно в `src/settings.ts`:
 
 ```tsx
-export const settings = defineSettings({
+import { defineAddonSettings, SettingType } from '@pulsesync/addon-sdk'
+
+export const settings = defineAddonSettings({
     enabled: {
-        type: 'boolean',
+        type: SettingType.BOOLEAN,
         name: 'Включить аддон',
         default: true,
     },
 })
 ```
 
-Передай `settings` в `pulseSyncAddon()` внутри `vite.config.ts`, а в компоненте используй `settings.use(api)`. SDK сам добавит схему в `metadata.json`; отдельный `handleEvents.json` новому аддону не нужен.
+Передай `settings` в `defineAddon()` и `pulseSyncAddon()` внутри `vite.config.ts`, а в компоненте используй `settings.use()`. В обычном коде доступен readonly-снимок `settings.store`. SDK сам выводит типы значений и добавляет схему в `metadata.json`; отдельный `handleEvents.json` новому аддону не нужен.
 
 ## Команды
 
@@ -100,6 +102,7 @@ defineAddon({
 Код PulseSync и его производные части нельзя переносить в сторонние приложения, общие ядра многоплатформенных проектов, альтернативные SDK, фреймворки, шаблоны, инструменты разработки или самостоятельные сетевые сервисы, если на это нет отдельного письменного разрешения.
 
 Полный текст лицензии:
+
 - [`LICENSE`](./LICENSE) - английская версия
 - [`LICENSE.ru.md`](./LICENSE.ru.md) - русская версия
 

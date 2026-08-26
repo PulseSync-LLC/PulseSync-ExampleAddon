@@ -1,15 +1,15 @@
-import { defineSettings } from '@pulsesync/addon-sdk'
+import { defineAddonSettings, SettingType } from '@pulsesync/addon-sdk'
 
-export const settings = defineSettings(
+export const settings = defineAddonSettings(
     {
         enabled: {
-            type: 'boolean',
+            type: SettingType.BOOLEAN,
             name: 'Включить кнопку',
             description: 'Показывает компонент аддона в интерфейсе.',
             default: true,
         },
         accentColor: {
-            type: 'color',
+            type: SettingType.COLOR,
             name: 'Цвет кнопки',
             default: '#4ade80',
         },
