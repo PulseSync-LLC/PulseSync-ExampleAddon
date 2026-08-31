@@ -12,10 +12,10 @@ yarn dev
 Открой `src/main.tsx` и замени демонстрационный компонент своим:
 
 ```tsx
-import { defineAddon } from '@pulsesync/addon-sdk'
+import { defineAddon, type PulseSyncAddonComponentProps } from '@pulsesync/addon-sdk'
 
-function MyAddon() {
-    return <button>Мой аддон</button>
+function MyAddon({ api }: PulseSyncAddonComponentProps) {
+    return <button onClick={() => void api.client.togglePlayPause()}>Play / Pause</button>
 }
 
 export default defineAddon({

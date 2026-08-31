@@ -2,12 +2,12 @@ import './styles.css'
 
 import { useState } from 'react'
 
-import { defineAddon } from '@pulsesync/addon-sdk'
+import { defineAddon, type PulseSyncAddonComponentProps } from '@pulsesync/addon-sdk'
 
 import addonConfig from '../addon.config.mjs'
 import { settings } from './settings'
 
-function ExampleAddon() {
+function ExampleAddon({ api }: PulseSyncAddonComponentProps) {
     const [clicks, setClicks] = useState(0)
     const { accentColor, enabled } = settings.use()
 
@@ -15,7 +15,14 @@ function ExampleAddon() {
 
     return (
         <>
-            <button className="ps-example-addon" style={{ backgroundColor: accentColor }} onClick={() => setClicks(value => value + 1)}>
+            <button
+                className="ps-example-addon"
+                style={{ backgroundColor: accentColor }}
+                onClick={() => {
+                    void api.client.togglePlayPause()
+                    setClicks(value => value + 1)
+                }}
+            >
                 {addonConfig.name}: {clicks}
             </button>
         </>
