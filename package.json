@@ -15,10 +15,10 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@pulsesync/addon-sdk": "^0.5.2"
+    "@pulsesync/addon-sdk": "0.5.4"
   },
   "devDependencies": {
-    "@types/node": "26.4.0",
+    "@types/node": "26.4.1",
     "@types/react": "19.2.18",
     "@vitejs/plugin-react": "6.1.1",
     "prettier": "3.9.6",

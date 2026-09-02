@@ -7,17 +7,17 @@
   resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.147.0.tgz#512e43196053db4a99928e35b287549a3226268b"
   integrity sha512-IJ3s6ltHLp45S0bh7phkX+gJO7A1Wuz2EaqpAhb8WjqDwbzMiWKHhyyT42tskaWjEYXtHtVCPpnBJVT9+dcRLg==
 
-"@pulsesync/addon-sdk@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@pulsesync/addon-sdk/-/addon-sdk-0.5.2.tgz#9b1bcc786697bbf6c1b84882554af08376235274"
-  integrity sha512-LFYhkpfxuGK+vst8TE9yfumQUHLECk00kvzOMcAYzK6BjGyKdZo0gbTOFqRsvscOM6vkzzusG6YWVZW/sa+Wvg==
+"@pulsesync/addon-sdk@0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@pulsesync/addon-sdk/-/addon-sdk-0.5.4.tgz#02b01d30a66e4f1c430837185a3520b243e9df6e"
+  integrity sha512-iTtG1Z2/woWGdTjqHDlL3J1jILCvCEf+r2j/DFaQABE9+hOOskRrQV2lE5BaJ71ng0i2NqTmUd0/jGUYs8aaXw==
   dependencies:
-    "@pulsesync/yamusic-types" "^0.0.3"
+    "@pulsesync/yamusic-types" "^0.0.4"
 
-"@pulsesync/yamusic-types@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@pulsesync/yamusic-types/-/yamusic-types-0.0.3.tgz#d367c65eba0f60ff3200c188167c784f1570b857"
-  integrity sha512-ORJHD24krKql7ScNJ3E8uECXhoIkOMuwbm0DMiaIQtQC/8q3ytL3Rjz62eaXq1KzUaJZnBSEsDK+GoJiRLi/xQ==
+"@pulsesync/yamusic-types@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@pulsesync/yamusic-types/-/yamusic-types-0.0.4.tgz#3ac2a639ea9866128052b3469af58ad55dca17b9"
+  integrity sha512-6lEjx7SY93GK7hiuyKEWptzJfHMq5XKqu7ziLo8hPiLyFUOGCBBLV3u0zz2kgb6KtpMfi+zp7dA9V8B2NzMU1A==
 
 "@rolldown/binding-android-arm-eabi@1.2.6":
   version "1.2.6"
@@ -99,10 +99,10 @@
   resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz#e3fcee093fbb5ce765e1ad088ff4de2889f6f9be"
   integrity sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==
 
-"@types/node@26.4.0":
-  version "26.4.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.4.0.tgz#4c4ca071c42241fe602741d02999f16b4e64c468"
-  integrity sha512-faiGnoIrLH/V8cibOMEAZ8pMw6oXqSukl29ra4mN8GdaB2ZewzeaLj+INpV5N+Z1eKWzY+IzaIZH2EIR6YZRNQ==
+"@types/node@26.4.1":
+  version "26.4.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.4.1.tgz#3d8dc80515894958448ee266cf5d6bc3e5205bd5"
+  integrity sha512-k97ENvZWtvA6yqz5/FS6a7duDgOPEeOQOc2iKS/nY6mX6qJUKtLnWzQS+Xj6tXweyj6ZcTAK2Qecetnvi9nCLA==
   dependencies:
     undici-types "~8.3.0"
 

@@ -12,15 +12,25 @@ yarn dev
 Открой `src/main.tsx` и замени демонстрационный компонент своим:
 
 ```tsx
-import { defineAddon, type PulseSyncAddonComponentProps } from '@pulsesync/addon-sdk'
+import { defineAddon, type PulseSyncAddonComponentProps, YandexMusicIcon } from '@pulsesync/addon-sdk'
 
 function MyAddon({ api }: PulseSyncAddonComponentProps) {
-    return <button onClick={() => void api.client.togglePlayPause()}>Play / Pause</button>
+    return (
+        <button
+            title="Показать уведомление"
+            data-pulsesync-tooltip-description="Тестовое уведомление через PulseSync API"
+            onClick={() => void api.notifications.show('Аддон работает')}
+        >
+            <YandexMusicIcon name="info" size="xxs" />
+        </button>
+    )
 }
 
 export default defineAddon({
     id: 'my-addon',
-    component: MyAddon,
+    slots: {
+        playerBarButton: MyAddon,
+    },
 })
 ```
 

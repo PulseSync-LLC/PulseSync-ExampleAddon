@@ -8,11 +8,6 @@ export const settings = defineAddonSettings(
             description: 'Показывает компонент аддона в интерфейсе.',
             default: true,
         },
-        accentColor: {
-            type: SettingType.COLOR,
-            name: 'Цвет кнопки',
-            default: '#4ade80',
-        },
     },
     { title: 'Основные' },
 )

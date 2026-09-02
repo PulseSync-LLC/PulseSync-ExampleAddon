@@ -1,31 +1,28 @@
 import './styles.css'
 
-import { useState } from 'react'
-
-import { defineAddon, type PulseSyncAddonComponentProps } from '@pulsesync/addon-sdk'
+import { defineAddon, type PulseSyncAddonComponentProps, YandexMusicIcon } from '@pulsesync/addon-sdk'
 
 import addonConfig from '../addon.config.mjs'
 import { settings } from './settings'
 
-function ExampleAddon({ api }: PulseSyncAddonComponentProps) {
-    const [clicks, setClicks] = useState(0)
-    const { accentColor, enabled } = settings.use()
+function PlayerBarButton({ api }: PulseSyncAddonComponentProps) {
+    const { enabled } = settings.use()
 
     if (!enabled) return null
 
+    const showNotification = () => api.notifications.show('Аддон работает', {})
+
     return (
-        <>
-            <button
-                className="ps-example-addon"
-                style={{ backgroundColor: accentColor }}
-                onClick={() => {
-                    void api.client.togglePlayPause()
-                    setClicks(value => value + 1)
-                }}
-            >
-                {addonConfig.name}: {clicks}
-            </button>
-        </>
+        <button
+            type="button"
+            className="ps-example-addon"
+            aria-label="Показать уведомление"
+            title="Показать уведомление"
+            data-pulsesync-tooltip-description="Тестовое уведомление через PulseSync API"
+            onClick={() => void showNotification().catch((error: unknown) => api.logger.error('Не удалось показать уведомление', error))}
+        >
+            <YandexMusicIcon name="info" size="xxs" />
+        </button>
     )
 }
 
@@ -34,6 +31,6 @@ export default defineAddon({
     name: addonConfig.name,
     settings,
     slots: {
-        playerBarButton: ExampleAddon,
+        playerBarButton: PlayerBarButton,
     },
 })
