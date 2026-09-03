@@ -1,11 +1,11 @@
 import './styles.css'
 
-import { defineAddon, type PulseSyncAddonComponentProps, YandexMusicIcon } from '@pulsesync/addon-sdk'
+import { defineAddon, type AddonComponentProps, YandexMusicIcon } from '@pulsesync/addon-sdk'
 
 import addonConfig from '../addon.config.mjs'
 import { settings } from './settings'
 
-function PlayerBarButton({ api }: PulseSyncAddonComponentProps) {
+function PlayerBarButton({ api }: AddonComponentProps) {
     const { enabled } = settings.use()
 
     if (!enabled) return null
@@ -33,4 +33,16 @@ export default defineAddon({
     slots: {
         playerBarButton: PlayerBarButton,
     },
+    trackMenuItems: [
+        {
+            id: 'check-webhost',
+            label: 'Проверить WebHost',
+            icon: 'info',
+            position: 1,
+            onClick: ({ api, track }) => {
+                const album = track.albumId ? `, album ${track.albumId}` : ''
+                return api.notifications.show(`Track ${track.id}${album}`)
+            },
+        },
+    ],
 })

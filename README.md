@@ -12,9 +12,9 @@ yarn dev
 Открой `src/main.tsx` и замени демонстрационный компонент своим:
 
 ```tsx
-import { defineAddon, type PulseSyncAddonComponentProps, YandexMusicIcon } from '@pulsesync/addon-sdk'
+import { defineAddon, type AddonComponentProps, YandexMusicIcon } from '@pulsesync/addon-sdk'
 
-function MyAddon({ api }: PulseSyncAddonComponentProps) {
+function MyAddon({ api }: AddonComponentProps) {
     return (
         <button
             title="Показать уведомление"
@@ -52,7 +52,7 @@ export const settings = defineAddonSettings({
 })
 ```
 
-Передай `settings` в `defineAddon()` и `pulseSyncAddon()` внутри `vite.config.ts`, а в компоненте используй `settings.use()`. В обычном коде доступен readonly-снимок `settings.store`. SDK сам выводит типы значений и добавляет схему в `metadata.json`; отдельный `handleEvents.json` новому аддону не нужен.
+Передай `settings` в `defineAddon()` и `addonPlugin()` внутри `vite.config.ts`, а в компоненте используй `settings.use()`. В обычном коде доступен readonly-снимок `settings.store`. SDK сам выводит типы значений и добавляет схему в `metadata.json`; отдельный `handleEvents.json` новому аддону не нужен.
 
 ## Команды
 

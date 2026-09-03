@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import { defineAddonManifest, pulseSyncAddon } from '@pulsesync/addon-sdk/vite'
+import { addonPlugin, defineAddonManifest } from '@pulsesync/addon-sdk/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
     },
     plugins: [
         react(),
-        pulseSyncAddon({
+        addonPlugin({
             manifest,
             settings,
             minify: mode === 'development' ? false : 'oxc',
