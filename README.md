@@ -1,122 +1,66 @@
-# PulseSync React Addon Template
+# PulseSync Addon Template
 
-Минимальный шаблон React-аддона для PulseSync.
+Шаблон React-аддона для PulseSync на TypeScript, Vite и `@pulsesync/addon-sdk`.
 
 ## Быстрый старт
 
+Требования: Node.js 20+, Yarn, актуальные версии PulseSync и мода.
+
 ```bash
-yarn
+yarn install
 yarn dev
 ```
 
-Открой `src/main.tsx` и замени демонстрационный компонент своим:
+`yarn dev` автоматически пересобирает и устанавливает аддон при изменении исходных файлов, затем отправляет запрос на перезагрузку аддона. Для применения изменений PulseSync и Яндекс Музыка должны быть запущены.
+
+## Структура проекта
+
+- `addon.config.mjs` — ID, имя, автор, версия и разрешённые адреса `allowedUrls`. Для нового аддона необходимо указать собственные `id` и `directoryName`.
+- `src/main.tsx` — логика и интерфейс аддона. В примере кнопка плеера открывает форму заметки, сохраняет данные и показывает уведомление; пункт меню трека показывает его ID.
+- `src/settings.ts` — типизированные настройки; в React доступны через `settings.use()`.
+- `addon/` — статические файлы аддона.
+- `vite.config.ts` — сборка через плагин SDK.
+
+## Минимальный аддон
 
 ```tsx
-import { defineAddon, type AddonComponentProps, YandexMusicIcon } from '@pulsesync/addon-sdk'
+import { defineAddon, IconButton, notifications } from '@pulsesync/addon-sdk'
 
-function MyAddon({ api }: AddonComponentProps) {
+import addonConfig from '../addon.config.mjs'
+
+function PlayerButton() {
     return (
-        <button
-            title="Показать уведомление"
-            data-pulsesync-tooltip-description="Тестовое уведомление через PulseSync API"
-            onClick={() => void api.notifications.show('Аддон работает')}
-        >
-            <YandexMusicIcon name="info" size="xxs" />
-        </button>
+        <IconButton
+            icon="info"
+            label="Показать уведомление"
+            onClick={() => notifications.info('Аддон работает')}
+        />
     )
 }
 
 export default defineAddon({
-    id: 'my-addon',
-    slots: {
-        playerBarButton: MyAddon,
-    },
+    id: addonConfig.id,
+    slots: { playerBarButton: PlayerButton },
 })
 ```
 
-WebHost сам рендерит компонент. Вызывать `createRoot()` и устанавливать `react-dom` не нужно.
-
-## Настройки
-
-Настройки описываются типизированно в `src/settings.ts`:
-
-```tsx
-import { defineAddonSettings, SettingType } from '@pulsesync/addon-sdk'
-
-export const settings = defineAddonSettings({
-    enabled: {
-        type: SettingType.BOOLEAN,
-        name: 'Включить аддон',
-        default: true,
-    },
-})
-```
-
-Передай `settings` в `defineAddon()` и `addonPlugin()` внутри `vite.config.ts`, а в компоненте используй `settings.use()`. В обычном коде доступен readonly-снимок `settings.store`. SDK сам выводит типы значений и добавляет схему в `metadata.json`; отдельный `handleEvents.json` новому аддону не нужен.
+WebHost предоставляет React и рендерит компоненты: `react-dom` и `createRoot()` не нужны. Сервисы SDK вызываются в обработчиках, компонентах и `start`, а не при импорте модуля. API и примеры — в [документации SDK](https://www.npmjs.com/package/@pulsesync/addon-sdk).
 
 ## Команды
 
-- `yarn dev` - следит за исходниками, безопасно доставляет завершённую сборку в PulseSync, включает аддон и запрашивает его перезагрузку;
-- `yarn build` - создаёт готовый аддон в `dist/pulsesync-template`;
-- `yarn sync` - безопасно устанавливает готовую сборку в PulseSync и сохраняет пользовательские настройки;
-- `yarn build:sync` - собирает и копирует одной командой.
+| Команда | Действие |
+| --- | --- |
+| `yarn dev` | Сборка при изменениях, установка и запрос перезагрузки аддона |
+| `yarn build` | Сборка в `dist/<directoryName>` без установки |
+| `yarn sync` | Установка готовой сборки с сохранением пользовательских настроек |
+| `yarn build:sync` | Сборка и установка |
+| `yarn format` | Форматирование файлов проекта |
 
-`yarn dev` собирает сначала во временную папку проекта, поэтому Vite не очищает установленный аддон. После завершения сборки шаблон сохраняет созданный клиентом `pulsesync.settings.json`, заменяет файлы аддона и обращается к локальному PulseSync. В терминале видно, принял ли клиент обновление и есть ли подключённое окно Яндекс Музыки.
+Каталог установки задаётся переменной окружения `PULSESYNC_ADDONS_DIR`. Если клиент недоступен, установленная сборка загружается при следующем запуске.
 
-Если PulseSync не запущен или ещё не поддерживает development reload, сборка всё равно устанавливается и будет подхвачена при следующем запуске. Путь можно переопределить через `PULSESYNC_ADDONS_DIR`.
+## Лицензия
 
-## Куда рендерить компонент
-
-Обычный компонент:
-
-```tsx
-defineAddon({
-    id: 'my-addon',
-    component: MyAddon,
-})
-```
-
-Стандартная точка WebHost:
-
-```tsx
-defineAddon({
-    id: 'my-addon',
-    slots: {
-        playerBarButton: PlayerButton,
-    },
-})
-```
-
-Собственная DOM-цель:
-
-```tsx
-defineAddon({
-    id: 'my-addon',
-    mounts: [
-        {
-            target: '[data-test-id="PLAYERBAR_DESKTOP"]',
-            component: PlayerButton,
-        },
-    ],
-})
-```
-
-Метаданные находятся в `addon.config.mjs`, стили - в `src/styles.css`, статические файлы - в `addon/`.
-
-## License
-
-Код и материалы PulseSync в этом репозитории распространяются по лицензии **PulseSync Addon Development License 1.1**.
-
-Лицензия разрешает использовать и изменять эти материалы для разработки аддонов PulseSync, в том числе коммерческих и с закрытым исходным кодом. Код, который разработчик написал самостоятельно и который не основан на коде PulseSync, остается за разработчиком.
-
-Код PulseSync и его производные части нельзя переносить в сторонние приложения, общие ядра многоплатформенных проектов, альтернативные SDK, фреймворки, шаблоны, инструменты разработки или самостоятельные сетевые сервисы, если на это нет отдельного письменного разрешения.
-
-Полный текст лицензии:
-
-- [`LICENSE`](./LICENSE) - английская версия
-- [`LICENSE.ru.md`](./LICENSE.ru.md) - русская версия
-
-Обе версии являются официальными. Если между ними есть расхождение, применяется русская версия в пределах, допускаемых законом.
+PulseSync Addon Development License 1.1: [русский текст](./LICENSE.ru.md) · [English](./LICENSE). При расхождениях применяется русская версия в пределах, допускаемых законом.
 
 Copyright © 2026 Матвиенко Артём Евгеньевич.
-Все права защищены, кроме прямо предоставленных лицензией.
+Все права защищены.
