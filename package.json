@@ -15,7 +15,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@pulsesync/addon-sdk": "0.9.1"
+    "@pulsesync/addon-sdk": "0.10.0"
   },
   "devDependencies": {
     "@types/node": "26.4.1",
