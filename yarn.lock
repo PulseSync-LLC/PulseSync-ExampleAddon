@@ -7,17 +7,17 @@
   resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.147.0.tgz#512e43196053db4a99928e35b287549a3226268b"
   integrity sha512-IJ3s6ltHLp45S0bh7phkX+gJO7A1Wuz2EaqpAhb8WjqDwbzMiWKHhyyT42tskaWjEYXtHtVCPpnBJVT9+dcRLg==
 
-"@pulsesync/addon-sdk@0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@pulsesync/addon-sdk/-/addon-sdk-0.10.0.tgz#85bf34ff40a49ca46a0ee74913fb45e6b5ffcf49"
-  integrity sha512-9MYnTo3IjhtvJddLtDBPe77k0mFa9dWqnuTYo9LyfDQ6dbdb5cd0Is3eS87dn+BiWh0VNV0FrJsS0XlsM/3gsQ==
+"@pulsesync/addon-sdk@0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmjs.org/@pulsesync/addon-sdk/-/addon-sdk-0.12.0.tgz#e2eb1b38cb771eeb7816614e7bcad1a23cc15d05"
+  integrity sha512-VaVEwvZbnFZQoZzhvmgsx7j1RwbUeBb/C4XQ7qdDddzlP/qazqKzvmIcCItRnGfE3TQBSPDE40d2ezNVCFyzfg==
   dependencies:
-    "@pulsesync/yamusic-types" "^0.0.5"
+    "@pulsesync/yamusic-types" "^0.3.0"
 
-"@pulsesync/yamusic-types@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@pulsesync/yamusic-types/-/yamusic-types-0.0.5.tgz#05f33b1fb9d6fff0d78b310db58091ceee9dbfc5"
-  integrity sha512-QLhBRyZFn+Zb7Hl1loVgfAtAiCo5glV/KVs5ZB7JNutyaKkW60ZT+Qz3dkVG8bTTxMbOhM9FUNl46XVVmQpcbQ==
+"@pulsesync/yamusic-types@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.npmjs.org/@pulsesync/yamusic-types/-/yamusic-types-0.3.0.tgz#d1ef7052be46cf24371ab29a57187fa569c8dc1c"
+  integrity sha512-b1HZGpeRbYVb7CELZqEBjoots1zxBPP4bQsdiROU60FNj+q7g/P1eKPmxYeeS6sgIFKCJCLeVCoBozAs5oUAPQ==
 
 "@rolldown/binding-android-arm-eabi@1.2.6":
   version "1.2.6"
