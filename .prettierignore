@@ -3,7 +3,3 @@ node_modules
 .idea
 dist
 yarn.lock
-*.md
-.prettierignore
-*.json
-*.yml

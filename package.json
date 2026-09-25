@@ -1,29 +1,27 @@
 {
-  "name": "pulsesync-example-addon",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "PulseSync React addon template built with the official SDK",
-  "scripts": {
-    "dev": "node ./scripts/dev-build.mjs",
-    "build": "node ./node_modules/vite/bin/vite.js build",
-    "format": "prettier --write .",
-    "sync": "node ./scripts/sync-addon.mjs",
-    "build:sync": "yarn build && yarn sync"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "dependencies": {
-    "@pulsesync/addon-sdk": "0.10.0"
-  },
-  "devDependencies": {
-    "@types/node": "26.4.1",
-    "@types/react": "19.2.18",
-    "@vitejs/plugin-react": "6.1.1",
-    "prettier": "3.9.6",
-    "react": "19.2.8",
-    "typescript": "7.0.2",
-    "vite": "8.2.2"
-  }
+    "name": "pulsesync-example-module",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "description": "PulseSync module template built with the official SDK",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite build --watch",
+        "typecheck": "tsc --noEmit",
+        "format": "prettier --write ."
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "dependencies": {
+        "@pulsesync/addon-sdk": "0.11.0"
+    },
+    "devDependencies": {
+        "@types/node": "26.4.1",
+        "@types/react": "19.2.18",
+        "prettier": "3.9.6",
+        "react": "19.2.8",
+        "typescript": "7.0.2",
+        "vite": "8.2.2"
+    }
 }

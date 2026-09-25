@@ -1,66 +1,48 @@
-# PulseSync Addon Template
+# PulseSync Module Template
 
-Шаблон React-аддона для PulseSync на TypeScript, Vite и `@pulsesync/addon-sdk`.
+Шаблон JavaScript-модуля на TypeScript и Vite. Пишете код, собираете один файл и загружаете его в кабинет разработчика.
 
-## Быстрый старт
+Шаблон самого аддона — в ветке `dev`.
 
-Требования: Node.js 20+, Yarn, актуальные версии PulseSync и мода.
+## Начало работы
 
-```bash
+Нужны Node.js 20+ и Yarn.
+
+```sh
 yarn install
-yarn dev
+yarn build
 ```
 
-`yarn dev` автоматически пересобирает и устанавливает аддон при изменении исходных файлов, затем отправляет запрос на перезагрузку аддона. Для применения изменений PulseSync и Яндекс Музыка должны быть запущены.
+Готовый файл: **`dist/module/module.js`**.
 
-## Структура проекта
+## Где писать код
 
-- `addon.config.mjs` — ID, имя, автор, версия и разрешённые адреса `allowedUrls`. Для нового аддона необходимо указать собственные `id` и `directoryName`.
-- `src/main.tsx` — логика и интерфейс аддона. В примере кнопка плеера открывает форму заметки, сохраняет данные и показывает уведомление; пункт меню трека показывает его ID.
-- `src/settings.ts` — типизированные настройки; в React доступны через `settings.use()`.
-- `addon/` — статические файлы аддона.
-- `vite.config.ts` — сборка через плагин SDK.
+- `src/module.ts` — логика модуля. В примере — функция `formatLabel`.
+- `src/module-api.ts` — тип экспортируемых функций и версия API (`apiMajor`).
+- `vite.config.ts` — настройки сборки.
 
-## Минимальный аддон
+`yarn dev` пересобирает модуль при изменениях, `yarn typecheck` проверяет типы, `yarn format` форматирует код.
 
-```tsx
-import { defineAddon, IconButton, notifications } from '@pulsesync/addon-sdk'
+Если меняете API несовместимым образом, увеличьте `apiMajor`. Подписки и таймеры очищайте в `dispose`, возвращаемом из `create`.
 
-import addonConfig from '../addon.config.mjs'
+## Как опубликовать
 
-function PlayerButton() {
-    return (
-        <IconButton
-            icon="info"
-            label="Показать уведомление"
-            onClick={() => notifications.info('Аддон работает')}
-        />
-    )
-}
+1. В кабинете разработчика создайте модуль и версию типа **JavaScript**.
+2. Укажите API из `src/module-api.ts` — по умолчанию `1`.
+3. Загрузите `dist/module/module.js`, сохраните и отправьте на проверку.
+4. После одобрения опубликуйте версию в нужный канал.
 
-export default defineAddon({
-    id: addonConfig.id,
-    slots: { playerBarButton: PlayerButton },
-})
-```
+`module.json` загружать не нужно. Публичный и защищённый модули собираются одинаково — доступ настраивается в кабинете.
 
-WebHost предоставляет React и рендерит компоненты: `react-dom` и `createRoot()` не нужны. Сервисы SDK вызываются в обработчиках, компонентах и `start`, а не при импорте модуля. API и примеры — в [документации SDK](https://www.npmjs.com/package/@pulsesync/addon-sdk).
+## Как подключить
 
-## Команды
+В конфигурации аддона укажите UUID модуля, его API и канал под своим именем, например `label_formatter`. Загружайте его через `modules.load('label_formatter')` в обработчике или при запуске аддона; ошибку загрузки обработайте через `try/catch`.
 
-| Команда | Действие |
-| --- | --- |
-| `yarn dev` | Сборка при изменениях, установка и запрос перезагрузки аддона |
-| `yarn build` | Сборка в `dist/<directoryName>` без установки |
-| `yarn sync` | Установка готовой сборки с сохранением пользовательских настроек |
-| `yarn build:sync` | Сборка и установка |
-| `yarn format` | Форматирование файлов проекта |
-
-Каталог установки задаётся переменной окружения `PULSESYNC_ADDONS_DIR`. Если клиент недоступен, установленная сборка загружается при следующем запуске.
+Для WASM нужен компилятор выбранного языка. Полученный бинарный `.wasm` загружается в версию типа **WebAssembly**.
 
 ## Лицензия
 
-PulseSync Addon Development License 1.1: [русский текст](./LICENSE.ru.md) · [English](./LICENSE). При расхождениях применяется русская версия в пределах, допускаемых законом.
+PulseSync Addon Development License 1.1: [русский текст](./LICENSE.ru.md) · [English](./LICENSE).
 
 Copyright © 2026 Матвиенко Артём Евгеньевич.
 Все права защищены.

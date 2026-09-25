@@ -7,17 +7,17 @@
   resolved "https://registry.yarnpkg.com/@oxc-project/types/-/types-0.147.0.tgz#512e43196053db4a99928e35b287549a3226268b"
   integrity sha512-IJ3s6ltHLp45S0bh7phkX+gJO7A1Wuz2EaqpAhb8WjqDwbzMiWKHhyyT42tskaWjEYXtHtVCPpnBJVT9+dcRLg==
 
-"@pulsesync/addon-sdk@0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@pulsesync/addon-sdk/-/addon-sdk-0.10.0.tgz#85bf34ff40a49ca46a0ee74913fb45e6b5ffcf49"
-  integrity sha512-9MYnTo3IjhtvJddLtDBPe77k0mFa9dWqnuTYo9LyfDQ6dbdb5cd0Is3eS87dn+BiWh0VNV0FrJsS0XlsM/3gsQ==
+"@pulsesync/addon-sdk@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.npmjs.org/@pulsesync/addon-sdk/-/addon-sdk-0.11.0.tgz#2038297acece5536868fbba64776a8e07cb80348"
+  integrity sha512-5rrZfly1FmOyIowuq4EhGGyyxxU9VGZmzfyMApt3I/wtRs0yGGKTU7c6uTm09CrJTqVsPy3qdFgCKS/ST2nUpA==
   dependencies:
-    "@pulsesync/yamusic-types" "^0.0.5"
+    "@pulsesync/yamusic-types" "^0.2.0"
 
-"@pulsesync/yamusic-types@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@pulsesync/yamusic-types/-/yamusic-types-0.0.5.tgz#05f33b1fb9d6fff0d78b310db58091ceee9dbfc5"
-  integrity sha512-QLhBRyZFn+Zb7Hl1loVgfAtAiCo5glV/KVs5ZB7JNutyaKkW60ZT+Qz3dkVG8bTTxMbOhM9FUNl46XVVmQpcbQ==
+"@pulsesync/yamusic-types@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/@pulsesync/yamusic-types/-/yamusic-types-0.2.0.tgz#da0371b56bd73576a05982ff5dc14fb7d8fbdee7"
+  integrity sha512-B1KdlB+JcqCM2jugINW0dDiVgk3g/ZiXcX/Uwe5JOE8KM5ggpka8zK8oppPUFat5N+PDCeZf4I4PQqipPLw1Lg==
 
 "@rolldown/binding-android-arm-eabi@1.2.6":
   version "1.2.6"
@@ -94,7 +94,7 @@
   resolved "https://registry.yarnpkg.com/@rolldown/binding-win32-x64-msvc/-/binding-win32-x64-msvc-1.2.6.tgz#1162903e264ed10db4be8af40ba8cf13cd4a0b4a"
   integrity sha512-np8iZSLfXlAD4kWhiyq/u0Yt8oZDtRQ8lGhQaCXo2rl37KNjeU0GjJuwr4P3oeZ++ROfofsKNBqR5LTO8aXyWQ==
 
-"@rolldown/pluginutils@^1.0.0", "@rolldown/pluginutils@^1.0.1":
+"@rolldown/pluginutils@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz#e3fcee093fbb5ce765e1ad088ff4de2889f6f9be"
   integrity sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==
@@ -212,13 +212,6 @@
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz#cf3b7b0d6ce5635daca4c8e01c189cdcde47ec3c"
   integrity sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==
-
-"@vitejs/plugin-react@6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-6.1.1.tgz#47fa1a2f956e88eaf778ebf65ddce8e2b36597e7"
-  integrity sha512-yxLaQV9gkhS8ezJqCM6+ndU7mDY6gqAg75NQ+0IjwEI8IYOmQCgkRwHKVSfWXW076DsqMo0Dk+0FK1U+M5RgFw==
-  dependencies:
-    "@rolldown/pluginutils" "^1.0.1"
 
 csstype@^3.2.2:
   version "3.2.3"
