@@ -16,5 +16,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "vite.config.ts", "addon.config.d.mts"]
+  "include": ["src", "modules/**/*.ts", "vite.config.ts", "addon.config.d.mts"]
 }

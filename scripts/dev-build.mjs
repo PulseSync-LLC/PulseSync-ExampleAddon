@@ -3,14 +3,16 @@ import { spawn } from 'node:child_process'
 import { promises as fs } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import addonConfig from '../addon.config.mjs'
-import { deliverAddon, formatDeliveryResult } from './addon-delivery.mjs'
+import { deliverAddon, formatDeliveryResult, localModuleSignature, notifyClient } from './addon-delivery.mjs'
+import { createModuleBuilder } from './module-build.mjs'
 
-const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const scriptRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const rootDir = process.argv[2] ? path.resolve(process.argv[2]) : scriptRoot
+const addonConfigPath = path.join(rootDir, 'addon.config.mjs')
+const { default: addonConfig } = await import(pathToFileURL(addonConfigPath).href)
 const viteBin = path.join(rootDir, 'node_modules', 'vite', 'bin', 'vite.js')
 const outDir = path.join(rootDir, '.pulsesync-dev', addonConfig.directoryName)
 const addonStaticDir = path.join(rootDir, 'addon')
-const addonConfigPath = path.join(rootDir, 'addon.config.mjs')
 
 async function loadAddonConfig() {
     const configUrl = new URL(pathToFileURL(addonConfigPath).href)
@@ -38,8 +40,17 @@ async function collectWatchEntries(dir, bucket = []) {
     return bucket
 }
 
+async function hasStaticAddonDir() {
+    try {
+        return (await fs.stat(addonStaticDir)).isDirectory()
+    } catch (error) {
+        if (error?.code === 'ENOENT') return false
+        throw error
+    }
+}
+
 async function buildStaticSignature() {
-    const entries = await collectWatchEntries(addonStaticDir)
+    const entries = (await hasStaticAddonDir()) ? await collectWatchEntries(addonStaticDir) : []
     const addonConfigStat = await fs.stat(addonConfigPath)
 
     entries.push(`${path.relative(rootDir, addonConfigPath)}:${addonConfigStat.mtimeMs}:${addonConfigStat.size}`)
@@ -57,7 +68,9 @@ async function syncStaticAddonArtifacts() {
     }
 
     await fs.mkdir(outDir, { recursive: true })
-    await fs.cp(addonStaticDir, outDir, { recursive: true, force: true })
+    if (await hasStaticAddonDir()) {
+        await fs.cp(addonStaticDir, outDir, { recursive: true, force: true })
+    }
 }
 
 async function collectBuildEntries() {
@@ -78,15 +91,42 @@ async function buildIsReady() {
     }
 }
 
-console.log(`Watching addon sources; staging completed builds in ${outDir}`)
+console.log('Разработка аддона: сборка, синхронизация и перезагрузка выполняются автоматически. Ctrl+C — выход.')
 
 let lastStaticSignature = ''
-let staticSyncPromise = Promise.resolve()
 let warnedDirectoryName = ''
 let observedBuildSignature = ''
 let lastDeliveredBuildSignature = ''
 let buildStableSince = 0
-let deliveryPromise = Promise.resolve()
+let delivering = false
+let syncingStatic = false
+let lastDelivery
+let lastClientCheck = 0
+let lastClientMessage = ''
+let lastDeliveryError = ''
+let stopping = false
+let child
+let deliveryTimer
+let staticSyncTimer
+let moduleTimer
+const modules = createModuleBuilder(rootDir)
+
+const stop = signal => {
+    stopping = true
+    clearInterval(staticSyncTimer)
+    clearInterval(deliveryTimer)
+    clearInterval(moduleTimer)
+    modules.stop()
+    child?.kill(signal)
+}
+process.on('SIGINT', () => stop('SIGINT'))
+process.on('SIGTERM', () => stop('SIGTERM'))
+
+function reportClient(result) {
+    const message = formatDeliveryResult(result)
+    if (message !== lastClientMessage) console.log(message)
+    lastClientMessage = message
+}
 
 const syncStaticIfNeeded = async force => {
     const nextSignature = await buildStaticSignature()
@@ -100,59 +140,83 @@ const syncStaticIfNeeded = async force => {
 }
 
 await syncStaticIfNeeded(true)
+await modules.update({ force: true })
+if (stopping) process.exit(130)
 
-const child = spawn(process.execPath, [viteBin, 'build', '--watch', '--mode', 'development'], {
+child = spawn(process.execPath, [viteBin, 'build', '--watch', '--mode', 'development'], {
     cwd: rootDir,
     env: {
         ...process.env,
         PULSESYNC_ADDON_OUT_DIR: outDir,
     },
     stdio: 'inherit',
+    windowsHide: true,
 })
 
-const deliveryTimer = setInterval(() => {
-    deliveryPromise = deliveryPromise
-        .then(async () => {
-            const entries = await collectBuildEntries()
-            const signature = entries.sort().join('|')
-            if (!signature) return
-
-            if (signature !== observedBuildSignature) {
-                observedBuildSignature = signature
-                buildStableSince = Date.now()
-                return
-            }
-            if (signature === lastDeliveredBuildSignature || Date.now() - buildStableSince < 600) return
-            if (!(await buildIsReady())) return
-
-            const result = await deliverAddon(outDir)
-            lastDeliveredBuildSignature = signature
-            console.log(formatDeliveryResult(result))
-        })
-        .catch(error => {
-            console.error('Failed to deliver addon build:', error)
-        })
-}, 200)
-
-const staticSyncTimer = setInterval(() => {
-    staticSyncPromise = staticSyncPromise
-        .then(() => syncStaticIfNeeded(false))
-        .catch(error => {
-            console.error('Failed to sync static addon files:', error)
-        })
+moduleTimer = setInterval(() => {
+    if (!delivering && !syncingStatic) void modules.update()
 }, 500)
 
-const stop = signal => {
-    clearInterval(staticSyncTimer)
-    clearInterval(deliveryTimer)
-    child.kill(signal)
-}
+deliveryTimer = setInterval(async () => {
+    if (delivering || stopping || !modules.ready) return
+    delivering = true
+    try {
+        const entries = await collectBuildEntries()
+        const signature = entries.sort().join('|') + (await localModuleSignature(rootDir))
+        if (!signature) return
 
-process.on('SIGINT', () => stop('SIGINT'))
-process.on('SIGTERM', () => stop('SIGTERM'))
+        if (signature !== observedBuildSignature) {
+            observedBuildSignature = signature
+            buildStableSince = Date.now()
+            return
+        }
+        if (signature === lastDeliveredBuildSignature) {
+            if (lastDelivery && Date.now() - lastClientCheck >= 5000) {
+                lastClientCheck = Date.now()
+                const client = await notifyClient(lastDelivery.directoryName)
+                reportClient({ ...lastDelivery, client })
+            }
+            return
+        }
+        if (Date.now() - buildStableSince < 600) return
+        if (!(await buildIsReady())) return
+        if (!modules.ready || stopping) return
+
+        const result = await deliverAddon(outDir, await loadAddonConfig(), rootDir)
+        lastDeliveredBuildSignature = signature
+        lastDelivery = result
+        lastClientCheck = Date.now()
+        lastClientMessage = ''
+        lastDeliveryError = ''
+        reportClient(result)
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error)
+        if (message !== lastDeliveryError) console.error(`Не удалось синхронизировать аддон: ${message}`)
+        lastDeliveryError = message
+    } finally {
+        delivering = false
+    }
+}, 200)
+
+staticSyncTimer = setInterval(async () => {
+    if (syncingStatic || delivering || stopping) return
+    syncingStatic = true
+    try {
+        await syncStaticIfNeeded(false)
+    } catch (error) {
+        console.error('Failed to sync static addon files:', error)
+    } finally {
+        syncingStatic = false
+    }
+}, 500)
+
+child.on('error', error => {
+    console.error(`Не удалось запустить Vite: ${error.message}`)
+    stop('SIGTERM')
+    process.exitCode = 1
+})
 
 child.on('exit', code => {
-    clearInterval(staticSyncTimer)
-    clearInterval(deliveryTimer)
+    stop('SIGTERM')
     process.exitCode = code ?? 0
 })

@@ -1,12 +1,44 @@
 import path from 'node:path'
 import { promises as fs } from 'node:fs'
 
-import addonConfig from '../addon.config.mjs'
 import { getPulseSyncAddonsDir } from './pulsesync-paths.mjs'
+import { discoverModules } from './module-discovery.mjs'
 
 const SETTINGS_FILENAME = 'pulsesync.settings.json'
 const CLIENT_RELOAD_URL = process.env.PULSESYNC_CLIENT_URL || 'http://127.0.0.1:2007'
 const CLIENT_RELOAD_HEADER = 'X-PulseSync-Addon-Dev'
+const LOCAL_MODULES_FILENAME = 'modules.local.json'
+
+export async function readLocalModules(rootDir) {
+    const modules = await discoverModules(rootDir)
+    return modules.length ? Object.fromEntries(modules.map(({ alias, path, kind, apiMajor }) => [alias, { path, kind, apiMajor }])) : undefined
+}
+
+export async function localModuleSignature(rootDir) {
+    const modules = await readLocalModules(rootDir)
+    if (!modules) return ''
+    const files = await Promise.all(
+        Object.values(modules).map(async ref => {
+            const stat = await fs.stat(resolveBuildFile(rootDir, ref.path))
+            return `${ref.path}:${stat.mtimeMs}:${stat.size}`
+        }),
+    )
+    return JSON.stringify([modules, files])
+}
+
+async function copyLocalModules(rootDir, stagingDir) {
+    const modules = await readLocalModules(rootDir)
+    if (!modules) return
+    const config = Object.create(null)
+    for (const [alias, ref] of Object.entries(modules)) {
+        const relativePath = `.pulsesync-local-modules/${alias}.${ref.kind === 'wasm' ? 'wasm' : 'js'}`
+        const target = path.join(stagingDir, relativePath)
+        await fs.mkdir(path.dirname(target), { recursive: true })
+        await fs.copyFile(resolveBuildFile(rootDir, ref.path), target)
+        config[alias] = { ...ref, path: relativePath }
+    }
+    await fs.writeFile(path.join(stagingDir, LOCAL_MODULES_FILENAME), JSON.stringify(config, null, 2))
+}
 
 function normalizeDirectoryName(value) {
     const directoryName = String(value || '').trim()
@@ -38,7 +70,7 @@ function resolveBuildFile(sourceDir, fileName) {
     return resolvedPath
 }
 
-async function validateSource(sourceDir) {
+async function validateSource(sourceDir, addonConfig) {
     const metadataPath = path.join(sourceDir, 'metadata.json')
     const metadata = await readJson(metadataPath)
 
@@ -76,7 +108,7 @@ async function assertTargetCanBeReplaced(targetDir) {
     }
 }
 
-async function notifyClient(directoryName) {
+export async function notifyClient(directoryName) {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 2_000)
 
@@ -116,15 +148,16 @@ export function formatDeliveryResult(result) {
     if (result.client.status === 'acknowledged') {
         const recipients = result.client.recipients
         return recipients > 0
-            ? `Delivered ${result.name} to PulseSync; reload sent to ${recipients} Yandex Music client${recipients === 1 ? '' : 's'}`
-            : `Installed ${result.name}; PulseSync acknowledged it, but Yandex Music is not ready`
+            ? `${result.name}: синхронизирован, перезагрузка отправлена в Яндекс Музыку.`
+            : `${result.name}: установлен. Запустите Яндекс Музыку с модом.`
     }
-    if (result.client.status === 'unsupported') return `Installed ${result.name}; running PulseSync does not support development reload yet`
-    if (result.client.status === 'rejected') return `Installed ${result.name}; PulseSync rejected reload: ${result.client.reason}`
-    return `Installed ${result.name}; PulseSync is not running or not reachable`
+    if (result.client.status === 'unsupported')
+        return `${result.name}: установлен. Обновите PulseSync — клиент не поддерживает перезагрузку для разработки.`
+    if (result.client.status === 'rejected') return `${result.name}: PulseSync отклонил перезагрузку: ${result.client.reason}`
+    return `${result.name}: установлен. PulseSync пока недоступен.`
 }
 
-export async function deliverAddon(sourceDir) {
+export async function deliverAddon(sourceDir, addonConfig, rootDir) {
     const directoryName = normalizeDirectoryName(addonConfig.directoryName)
     const targetRoot = path.resolve(getPulseSyncAddonsDir())
     const targetDir = path.join(targetRoot, directoryName)
@@ -134,10 +167,11 @@ export async function deliverAddon(sourceDir) {
     const backupDir = path.join(transactionRoot, `${transactionId}-previous`)
     const resolvedSourceDir = path.resolve(sourceDir)
 
-    const metadata = await validateSource(resolvedSourceDir)
+    const metadata = await validateSource(resolvedSourceDir, addonConfig)
     await fs.mkdir(transactionRoot, { recursive: true })
     await assertTargetCanBeReplaced(targetDir)
     await fs.cp(resolvedSourceDir, stagingDir, { recursive: true, force: true })
+    await copyLocalModules(rootDir, stagingDir)
     await fs.rm(path.join(stagingDir, SETTINGS_FILENAME), { force: true })
     const settingsPreserved = await preserveClientSettings(targetDir, stagingDir)
 
