@@ -4,7 +4,7 @@
 
 ## Запуск
 
-Нужны Node.js 20+, Yarn, Rust с Cargo и актуальные PulseSync и мод. Один раз выполните:
+Нужны Node.js 20.19+ в ветке 20.x либо 22.12+, Yarn, Rust с Cargo и актуальные PulseSync и мод. Один раз выполните:
 
 ```bash
 rustup target add wasm32-unknown-unknown

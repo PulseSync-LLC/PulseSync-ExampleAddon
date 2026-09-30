@@ -12,6 +12,8 @@ const addonConfig = {
     dependencies: [],
     allowedUrls: [],
     supportedVersions: [],
+    cssScope: 'addon',
+    requirements: { minHostApi: 1, capabilities: ['lifecycle-v1', 'async-start-v1', 'scoped-css-v1', 'net-per-addon-v1'] },
 }
 
 export default addonConfig

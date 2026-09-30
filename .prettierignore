@@ -1,9 +1,0 @@
-node_modules
-.vite
-.idea
-dist
-yarn.lock
-*.md
-.prettierignore
-*.json
-*.yml
