@@ -16,7 +16,7 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "dependencies": {
-    "@pulsesync/addon-sdk": "0.15.0"
+    "@pulsesync/addon-sdk": "0.16.0"
   },
   "devDependencies": {
     "@types/node": "26.6.3",
