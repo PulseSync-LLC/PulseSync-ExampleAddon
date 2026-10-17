@@ -65,7 +65,15 @@ async function tick() {
         attempted = signature
         const configUrl = new URL(pathToFileURL(configPath).href)
         configUrl.searchParams.set('revision', signature)
-        const { default: config } = await import(configUrl.href)
+        const { default: importedConfig } = await import(configUrl.href)
+        const manifest = await fs
+            .readFile(path.join(rootDir, 'addon.manifest.json'), 'utf8')
+            .then(JSON.parse)
+            .catch(error => {
+                if (error.code === 'ENOENT') return {}
+                throw error
+            })
+        const config = { ...importedConfig, ...manifest, directoryName: importedConfig.directoryName }
         const directoryName = String(config.directoryName ?? '')
         if (lastDelivery && directoryName !== lastDelivery.directoryName)
             throw new Error('directoryName changed. Stop dev and move or remove the previous addon installation before restarting.')
